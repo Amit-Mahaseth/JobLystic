@@ -1,0 +1,27 @@
+@use "./auth";
+
+.register-page {
+  .auth-card {
+    border-top: 3px solid #8b5cf6;
+  }
+
+  .auth-heading {
+    margin-bottom: 24px;
+  }
+
+  .auth-form {
+    gap: 15px;
+  }
+  .auth-field{
+.register-input{
+  display: flex;
+  gap: 10px;
+    #register-firstname{
+width: 50%;
+    }
+    #register-lastname{
+width: 50%;
+    }
+  }
+}
+}
