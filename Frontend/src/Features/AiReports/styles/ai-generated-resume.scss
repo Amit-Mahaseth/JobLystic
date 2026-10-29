@@ -1,0 +1,122 @@
+.ir-ai-resume-section {
+  display: grid;
+  gap: 18px;
+}
+
+.ir-ai-resume-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 24px;
+  border: 1px solid var(--ir-border);
+  border-radius: 8px;
+  background: var(--ir-surface);
+}
+
+.ir-ai-resume-heading h2 {
+  margin: 0;
+  color: var(--ir-text);
+  font-size: 19px;
+  font-weight: 680;
+}
+
+.ir-ai-resume-heading p:not(.ir-report-kicker) {
+  margin: 7px 0 0;
+  color: var(--ir-muted);
+  font-size: 13px;
+}
+
+.ir-ai-resume-generate {
+  min-height: 42px;
+  flex: 0 0 auto;
+  padding: 0 16px;
+  border: 1px solid var(--ir-accent);
+  border-radius: 6px;
+  color: #fff;
+  background: var(--ir-accent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.ir-ai-resume-generate:hover:not(:disabled) {
+  filter: brightness(0.94);
+}
+
+.ir-ai-resume-generate:focus-visible,
+.ir-ai-resume-actions a:focus-visible {
+  outline: 2px solid var(--ir-accent);
+  outline-offset: 3px;
+}
+
+.ir-ai-resume-generate:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.ir-ai-resume-error {
+  margin: 0;
+  color: #a33b32;
+  font-size: 13px;
+}
+
+.ir-ai-resume-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ir-ai-resume-actions a {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  padding: 0 13px;
+  border: 1px solid var(--ir-border);
+  border-radius: 6px;
+  color: var(--ir-text);
+  background: var(--ir-surface);
+  font-size: 12px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.ir-ai-resume-actions a:hover {
+  border-color: var(--ir-accent);
+  color: var(--ir-accent);
+}
+
+.ir-ai-resume-preview {
+  height: min(78vh, 900px);
+  min-height: 520px;
+  overflow: hidden;
+  border: 1px solid var(--ir-border);
+  border-radius: 8px;
+  background: var(--ir-surface);
+}
+
+.ir-ai-resume-preview iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .ir-ai-resume-heading {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 16px;
+    padding: 18px;
+  }
+
+  .ir-ai-resume-generate {
+    width: 100%;
+  }
+
+  .ir-ai-resume-preview {
+    height: 72vh;
+    min-height: 420px;
+  }
+}

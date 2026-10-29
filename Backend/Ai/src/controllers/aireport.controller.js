@@ -48,7 +48,7 @@ return res.status(201).json({
 }
 async function GetAllReports(req,res){
     try{
-        const AllReports=await InterviewReportModel.find({user:req.user.id}).select("resume jobDescription SelfDescription ")
+        const AllReports=await InterviewReportModel.find({user:req.user.id}).select("jobDescription createdAt readiness.OverallScore").sort({createdAt:-1})
         return res.status(200).json({
             msg:"All Reports Found",
             AllReports
@@ -63,7 +63,7 @@ async function GetAllReports(req,res){
 async function GetReportById(req,res){
     try{
         const {reportId}=req.params 
-        const Report=await InterviewReportModel.findOne({_id:reportId}).select("resume jobDescription SelfDescription ")
+        const Report=await InterviewReportModel.findOne({_id:reportId}).select("jobDescription SelfDescription readiness companyReadiness roadmap skillGaps technicalQuestions behavioralQuestions preparationIdeas")
         if(!Report){
             return res.status(404).json({
                 msg:"Report Not Found"

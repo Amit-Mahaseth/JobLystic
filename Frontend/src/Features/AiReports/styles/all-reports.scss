@@ -1,0 +1,93 @@
+.ir-all-reports-list {
+  display: grid;
+  gap: 9px;
+}
+
+.ir-report-list-row {
+  display: grid;
+  grid-template-areas: "main date score arrow";
+  grid-template-columns: minmax(0, 1fr) 140px 82px 16px;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+  padding: 16px 18px;
+  border: 1px solid var(--ir-border);
+  border-radius: 7px;
+  color: var(--ir-text);
+  background: var(--ir-surface);
+  text-decoration: none;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.ir-report-list-row:hover {
+  border-color: var(--ir-accent);
+  background: var(--ir-surface-muted);
+  text-decoration: none;
+}
+
+.ir-report-list-row:focus-visible {
+  outline: 2px solid var(--ir-accent);
+  outline-offset: 2px;
+}
+
+.ir-report-list-main {
+  display: grid;
+  grid-area: main;
+  min-width: 0;
+  gap: 5px;
+}
+
+.ir-report-list-main strong {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.ir-report-list-main small,
+.ir-report-list-date,
+.ir-report-list-score small {
+  color: var(--ir-muted);
+  font-size: 11px;
+}
+
+.ir-report-list-date {
+  grid-area: date;
+}
+
+.ir-report-list-score {
+  display: grid;
+  grid-area: score;
+  justify-items: end;
+  gap: 3px;
+}
+
+.ir-report-list-score strong {
+  color: var(--ir-text);
+  font-size: 15px;
+}
+
+.ir-report-list-arrow {
+  grid-area: arrow;
+  color: var(--ir-accent);
+  font-size: 17px;
+}
+
+@media (max-width: 640px) {
+  .ir-report-list-row {
+    grid-template-areas:
+      "main arrow"
+      "date score";
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 12px;
+    padding: 14px;
+  }
+
+  .ir-report-list-date {
+    align-self: end;
+  }
+}

@@ -145,7 +145,7 @@ function Home() {
       SelfDescription: selfDescription,
     })
     if (result?.success) {
-      navigate('/interview-report')
+      navigate(`/interview-report/report/${result.reportId}`)
     } else {
       setUploadError(result?.message || 'Unable to generate your report. Please try again.')
     }
@@ -161,7 +161,7 @@ function Home() {
         </Link>
         <div className="workspace-nav__right">
           <span className="workspace-nav__label">Career Workspace</span>
-          <Link className="workspace-reports-link" to="/interview-report">
+          <Link className="workspace-reports-link" to="/interviewAllreport">
             View reports
             <Icon name="arrow" size={16} />
           </Link>

@@ -3,245 +3,37 @@ import { Link, useParams } from 'react-router-dom'
 import ToggleTheme from '../../../components/ToggleTheme/ToggleTheme.jsx'
 import { useTheme } from '../../../contexts/themeContext.js'
 import InterviewReportDetails from '../components/InterviewReportDetails.jsx'
+import AiGeneratedResumeSection from '../components/AiGeneratedResumeSection.jsx'
+import {UseAiReport} from '../hook/UseAiReport.js'
 
-const report = {
-  readiness: {
-    OverallScore: 72,
-    levels: 'Intermediate',
-    dimensions: 'technicalKnowledge',
-    score: 72,
-    weight: 25,
-    explanation:
-      'A solid foundation across full-stack development, with clear opportunities to strengthen system design and production-scale experience.',
-    strengths: [
-      'Strong hands-on experience building full-stack applications',
-      'Comfortable with REST APIs, authentication, and data modeling',
-      'Good command of modern React development patterns',
-    ],
-    priorityAreas: [
-      'Designing resilient, high-traffic backend systems',
-      'Improving testing strategy and production observability',
-      'Explaining trade-offs with clear, structured reasoning',
-    ],
-    assessmentCoverage: 86,
-  },
-  companyReadiness: [
-    {
-      companyType: 'service-based',
-      readinessScore: 78,
-      status: 'better-prepared',
-      evidence: ['Examples span both client-facing requirements and implementation work.'],
-      strengths: ['Client-focused communication', 'Broad full-stack toolkit'],
-      skillGaps: ['Cloud deployment patterns'],
-      recommendedFocus: ['Practice requirement discovery and project estimation'],
-      assessmentCoverage: 90,
-      explanation: 'A versatile profile suited to varied client projects and delivery teams.',
-    },
-    {
-      companyType: 'product-based',
-      readinessScore: 71,
-      status: 'developing',
-      evidence: ['Project examples show user-facing feature delivery and modern frontend work.'],
-      strengths: ['User-focused feature development', 'Modern frontend experience'],
-      skillGaps: ['System design', 'Performance at scale'],
-      recommendedFocus: ['Study service boundaries and product metrics'],
-      assessmentCoverage: 84,
-      explanation: 'Good product engineering fundamentals; deepen scale and ownership examples.',
-    },
-    {
-      companyType: 'startup',
-      readinessScore: 82,
-      status: 'better-prepared',
-      evidence: ['Examples demonstrate end-to-end ownership across multiple application layers.'],
-      strengths: ['End-to-end project ownership', 'Adaptability across the stack'],
-      skillGaps: ['Prioritization under ambiguity'],
-      recommendedFocus: ['Prepare examples of shipping iterative solutions'],
-      assessmentCoverage: 88,
-      explanation: 'Hands-on breadth aligns well with fast-moving, cross-functional teams.',
-    },
-    {
-      companyType: 'enterprise',
-      readinessScore: 64,
-      status: 'needs-preparation',
-      evidence: ['Current examples provide less detail on distributed systems and operational controls.'],
-      strengths: ['Structured API development', 'Reliable data handling'],
-      skillGaps: ['Distributed systems', 'Governance and observability'],
-      recommendedFocus: ['Review reliability, access control, and service operations'],
-      assessmentCoverage: 79,
-      explanation: 'A promising base, with additional preparation needed for complex environments.',
-    },
-    {
-      companyType: 'consulting',
-      readinessScore: 74,
-      status: 'developing',
-      evidence: ['Examples indicate adaptable problem solving and technical communication.'],
-      strengths: ['Clear technical communication', 'Flexible problem solving'],
-      skillGaps: ['Architecture presentation'],
-      recommendedFocus: ['Practice concise architecture walkthroughs'],
-      assessmentCoverage: 83,
-      explanation: 'A balanced profile that can grow through more structured solution narratives.',
-    },
-  ],
-  skillGaps: [
-    {
-      skill: 'Node.js',
-      severity: 'low',
-      currentLevel: 76,
-      requiredLevel: 82,
-      importance: 4,
-      reason: 'Core backend experience is present; production operations and resilience patterns could be more detailed.',
-      evidence: ['Experience with REST APIs and authentication', 'MongoDB-backed application projects'],
-      missingConcepts: ['Event-loop performance', 'Graceful shutdown and observability'],
-      recommendedActions: ['Profile a Node.js service under load', 'Add structured logs and health checks to a project'],
-      confidence: 0.91,
-    },
-    {
-      skill: 'React',
-      severity: 'medium',
-      currentLevel: 72,
-      requiredLevel: 86,
-      importance: 5,
-      reason: 'Component development is a strength; advanced rendering and testing practices need deeper evidence.',
-      evidence: ['Built interfaces with reusable components', 'Experience integrating client-side APIs'],
-      missingConcepts: ['Render optimization', 'Accessible component testing'],
-      recommendedActions: ['Practice profiling a data-heavy view', 'Add component tests with keyboard accessibility checks'],
-      confidence: 0.88,
-    },
-    {
-      skill: 'System Design',
-      severity: 'high',
-      currentLevel: 54,
-      requiredLevel: 84,
-      importance: 5,
-      reason: 'Application-level implementation is stronger than the current evidence of designing for scale and failure.',
-      evidence: ['Project examples focus on features and APIs', 'Limited discussion of scaling and service boundaries'],
-      missingConcepts: ['Caching strategies', 'Queue-based processing', 'Availability and consistency trade-offs'],
-      recommendedActions: ['Design a rate-limited notification service', 'Explain data flow, failure modes, and scaling decisions'],
-      confidence: 0.84,
-    },
-  ],
-  roadmap: [
-    {
-      title: 'Map a scalable API architecture',
-      description: 'Sketch a service boundary, request flow, and data model for a growing product API.',
-      type: 'learn',
-      estimatedMinutes: 35,
-      status: 'completed',
-      completedAt: '2026-10-18T12:00:00.000Z',
-    },
-    {
-      title: 'Practice system design trade-offs',
-      description: 'Work through caching, queues, and failure handling for a notification service.',
-      type: 'practice',
-      estimatedMinutes: 45,
-      status: 'in-progress',
-      completedAt: null,
-    },
-    {
-      title: 'Build a small observability demo',
-      description: 'Add structured logs, health checks, and request metrics to a Node.js service.',
-      type: 'project',
-      estimatedMinutes: 90,
-      status: 'pending',
-      completedAt: null,
-    },
-    {
-      title: 'Review and explain a design',
-      description: 'Present the architecture, identify bottlenecks, and discuss alternatives out loud.',
-      type: 'assessment',
-      estimatedMinutes: 30,
-      status: 'pending',
-      completedAt: null,
-    },
-  ],
-  preparationIdeas: [
-    {
-      day: 1,
-      focus: 'Core concepts',
-      skill: 'System Design',
-      tasks: ['Review latency, throughput, and availability', 'Compare caching approaches'],
-    },
-    {
-      day: 2,
-      focus: 'Guided practice',
-      skill: 'System Design',
-      tasks: ['Design a notification service', 'Trace one request and its failure modes'],
-    },
-    {
-      day: 3,
-      focus: 'Hands-on project',
-      skill: 'Node.js',
-      tasks: ['Add health checks and structured logging', 'Load-test a key endpoint'],
-    },
-    {
-      day: 4,
-      focus: 'Interview rehearsal',
-      skill: 'React',
-      tasks: ['Explain a performance improvement', 'Practice a component testing walkthrough'],
-    },
-  ],
-  technicalQuestions: [
-    {
-      question: 'How would you design a notification service that can handle traffic spikes?',
-      intention: 'Evaluates system design fundamentals, queueing strategy, reliability, and scaling trade-offs.',
-      answer:
-        'I would place a durable queue between request intake and delivery workers, then scale workers based on queue depth. I would make delivery idempotent, apply retries with backoff, and send repeatedly failing messages to a dead-letter queue. I would monitor queue age and delivery latency so capacity issues are visible early.',
-    },
-    {
-      question: 'What happens in the Node.js event loop when one request performs CPU-heavy work?',
-      intention: 'Checks understanding of Node.js concurrency and approaches to keeping the event loop responsive.',
-      answer:
-        'CPU-heavy work can block the event loop and delay unrelated requests. I would measure the workload first, then move suitable computation to worker threads or a separate job service. For I/O-bound work, I would keep operations asynchronous and monitor event-loop delay.',
-    },
-    {
-      question: 'How do you decide whether a React component should be memoized?',
-      intention: 'Assesses practical performance judgment and understanding of React rendering behavior.',
-      answer:
-        'I start by profiling rather than adding memoization everywhere. If a component is measurably expensive and rerenders with stable inputs, memoization can help. I also check whether state or component boundaries can be improved, since that may be a simpler fix.',
-    },
-  ],
-  behavioralQuestions: [
-    {
-      question: 'Tell me about a time you had to learn a new technology to deliver a project.',
-      intention: 'Explores learning agility, ownership, and how the candidate manages uncertainty.',
-      answer:
-        'On a project, I needed to add a capability that was new to me. I first clarified the expected behavior, then built a small proof of concept and checked the approach with a teammate. I documented what I learned and delivered the feature in smaller, testable steps.',
-    },
-    {
-      question: 'Describe a technical disagreement and how you worked through it.',
-      intention: 'Evaluates collaboration, communication, and the ability to compare trade-offs constructively.',
-      answer:
-        'I asked the other person to explain their main concern, then compared both approaches against reliability, delivery time, and maintenance. We agreed on a small experiment to validate the riskiest assumption. The evidence helped us choose a direction without making it personal.',
-    },
-  ],
-}
 
-const dimensions = [
-  {
-    name: 'Role Alignment',
-    score: 78,
-    weight: 30,
-    explanation: 'Your full-stack experience maps well to common role responsibilities.',
-  },
-  {
-    name: 'Skill Coverage',
-    score: 70,
-    weight: 25,
-    explanation: 'Most core skills are represented, with a few depth areas to develop.',
-  },
-  {
-    name: 'Technical Knowledge',
-    score: report.readiness.score,
-    weight: report.readiness.weight,
-    explanation: report.readiness.explanation,
-  },
-  {
-    name: 'Practical Ability',
-    score: 74,
-    weight: 20,
-    explanation: 'Project work shows practical delivery and implementation experience.',
-  },
-]
+
+// const dimensions = [
+//   {
+//     name: 'Role Alignment',
+//     score: 78,
+//     weight: 30,
+//     explanation: 'Your full-stack experience maps well to common role responsibilities.',
+//   },
+//   {
+//     name: 'Skill Coverage',
+//     score: 70,
+//     weight: 25,
+//     explanation: 'Most core skills are represented, with a few depth areas to develop.',
+//   },
+//   {
+//     name: 'Technical Knowledge',
+//     score: report.readiness.score,
+//     weight: report.readiness.weight,
+//     explanation: report.readiness.explanation,
+//   },
+//   {
+//     name: 'Practical Ability',
+//     score: 74,
+//     weight: 20,
+//     explanation: 'Project work shows practical delivery and implementation experience.',
+//   },
+// ]
 
 const companyLabels = {
   'service-based': 'Service-based',
@@ -295,9 +87,10 @@ const reportSections = [
   { slug: 'roadmap', label: 'Preparation roadmap' },
   { slug: 'technical', label: 'Technical questions' },
   { slug: 'behavioral', label: 'Behavioral questions' },
+  { slug: 'ai-resume', label: 'AI Resume' },
 ]
 
-function OverviewPage() {
+function OverviewPage({ report, reportPath }) {
   return (
     <>
       <section className="ir-overview-score ir-card">
@@ -317,7 +110,7 @@ function OverviewPage() {
             <span className="ir-level-badge">{report.readiness.levels}</span>
             <h2>Overall readiness</h2>
             <p>This is an illustrative sample score to help demonstrate the report layout.</p>
-            <Link className="ir-text-link" to="/interview-report/readiness">View readiness details <span aria-hidden="true">→</span></Link>
+            <Link className="ir-text-link" to={`${reportPath}/readiness`}>View readiness details <span aria-hidden="true">→</span></Link>
           </div>
         </div>
         <div className="ir-overview-summary">
@@ -343,14 +136,14 @@ function OverviewPage() {
               <Link
                 className="ir-preview-row"
                 key={company.companyType}
-                to={`/interview-report/companies/${company.companyType}`}
+                to={`${reportPath}/companies/${company.companyType}`}
               >
                 <span>{companyLabels[company.companyType]}</span>
                 <strong>{company.readinessScore}<small>/100</small></strong>
               </Link>
             ))}
           </div>
-          <Link className="ir-text-link" to="/interview-report/companies">View all company types <span aria-hidden="true">→</span></Link>
+          <Link className="ir-text-link" to={`${reportPath}/companies`}>View all company types <span aria-hidden="true">→</span></Link>
         </section>
 
         <section className="ir-card ir-overview-card">
@@ -360,13 +153,13 @@ function OverviewPage() {
           </div>
           <div className="ir-preview-list">
             {report.skillGaps.map((gap) => (
-              <Link className="ir-preview-row" key={gap.skill} to={`/interview-report/skills/${encodeURIComponent(gap.skill)}`}>
+              <Link className="ir-preview-row" key={gap.skill} to={`${reportPath}/skills/${encodeURIComponent(gap.skill)}`}>
                 <span>{gap.skill}<i className={`ir-severity-dot ir-severity-dot--${gap.severity}`} /></span>
                 <strong>{gap.currentLevel}<small>/100</small></strong>
               </Link>
             ))}
           </div>
-          <Link className="ir-text-link" to="/interview-report/skills">View skill details <span aria-hidden="true">→</span></Link>
+          <Link className="ir-text-link" to={`${reportPath}/skills`}>View skill details <span aria-hidden="true">→</span></Link>
         </section>
 
         <section className="ir-card ir-overview-card ir-overview-roadmap">
@@ -381,17 +174,17 @@ function OverviewPage() {
               </div>
             ))}
           </div>
-          <Link className="ir-text-link" to="/interview-report/roadmap">View preparation plan <span aria-hidden="true">→</span></Link>
+          <Link className="ir-text-link" to={`${reportPath}/roadmap`}>View preparation plan <span aria-hidden="true">→</span></Link>
         </section>
       </div>
 
       <div className="ir-overview-question-links">
-        <Link className="ir-question-link" to="/interview-report/technical">
+        <Link className="ir-question-link" to={`${reportPath}/technical`}>
           <span className="ir-section-icon"><Icon name="code" /></span>
           <span><strong>Technical interview questions</strong><small>{report.technicalQuestions.length} sample prompts and answers</small></span>
           <b aria-hidden="true">→</b>
         </Link>
-        <Link className="ir-question-link" to="/interview-report/behavioral">
+        <Link className="ir-question-link" to={`${reportPath}/behavioral`}>
           <span className="ir-section-icon"><Icon name="chat" /></span>
           <span><strong>Behavioral interview questions</strong><small>{report.behavioralQuestions.length} sample prompts and answers</small></span>
           <b aria-hidden="true">→</b>
@@ -404,7 +197,9 @@ function OverviewPage() {
 
 function InterviewReport() {
   const { theme } = useTheme()
-  const { section, item } = useParams()
+  const { section, item, reportId } = useParams()
+  const { report, loading, HandleAiGeneratedResumePdf } = UseAiReport()
+  const reportPath = reportId ? `/interview-report/report/${reportId}` : '/interview-report'
   const activeSection = reportSections.find((entry) => entry.slug === section)
   const pageTitle = item
     ? section === 'companies'
@@ -414,26 +209,33 @@ function InterviewReport() {
         : activeSection?.label
     : activeSection?.label || 'Your Interview Analysis'
 
+  if (loading) return <p>Loading report...</p>
+  if (!report) return <p>Report not found.</p>
+
   return (
     <main className="ir-page" data-theme={theme}>
       <header className="ir-topbar">
-        <Link className="ir-brand" to="/interview-report" aria-label="JobAnalytics report overview">
+        <Link className="ir-brand" to={reportPath} aria-label="JobAnalytics report overview">
           <span className="ir-brand__mark"><Icon name="briefcase" size={18} /></span>
           <span>JobAnalytics</span>
         </Link>
         <nav className="ir-topbar-nav" aria-label="Report sections">
-          <Link className={!section ? 'is-active' : ''} to="/interview-report">Overview</Link>
+          <Link className={!section ? 'is-active' : ''} to={reportPath}>Overview</Link>
           {reportSections.map((entry) => (
             <Link
               className={section === entry.slug ? 'is-active' : ''}
               key={entry.slug}
-              to={`/interview-report/${entry.slug}`}
+              to={`${reportPath}/${entry.slug}`}
             >
               {entry.label}
             </Link>
           ))}
         </nav>
         <div className="ir-topbar-actions">
+          <Link className="ir-home-link" to="/interviewAllreport">
+            All reports
+            <span aria-hidden="true">→</span>
+          </Link>
           <Link className="ir-home-link" to="/">
             Home
             <span aria-hidden="true">→</span>
@@ -444,7 +246,7 @@ function InterviewReport() {
 
       <div className="ir-container">
         <div className="ir-breadcrumbs">
-          <Link to="/interview-report">Report overview</Link>
+          <Link to={reportPath}>Report overview</Link>
           {activeSection && <><span aria-hidden="true">/</span><span>{activeSection.label}</span></>}
           {item && <><span aria-hidden="true">/</span><strong>{pageTitle}</strong></>}
         </div>
@@ -464,17 +266,23 @@ function InterviewReport() {
           </div>}
         </section>
         {section && <div className="ir-back-link"><Link to="/interview-report">← Back to report overview</Link></div>}
-        {section ? (
+        {section === 'ai-resume' ? (
+          <AiGeneratedResumeSection
+            reportId={report._id}
+            onGenerate={HandleAiGeneratedResumePdf}
+          />
+        ) : section ? (
           <InterviewReportDetails
             section={section}
             item={item}
             report={report}
-            dimensions={dimensions}
+            reportPath={reportPath}
+            dimensions={report.readiness?.dimensions}
             companyLabels={companyLabels}
             statusLabels={statusLabels}
           />
         ) : (
-          <OverviewPage />
+          <OverviewPage report={report} reportPath={reportPath} />
         )}
 
         <footer className="ir-footer">

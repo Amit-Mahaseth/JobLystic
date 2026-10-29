@@ -22,3 +22,18 @@ export const GetReportById= async (reportId)=>{
   const response= await API.get(`/report/${reportId}`)
   return response.data.Report
 }
+
+export const AiGeneratedResumePdf=async(reportId)=>{
+  const response=await API.post(`/resume/pdf/${reportId}`, null, { responseType: 'blob' })
+  return response.data
+}
+
+export const AnalyzeResumeProjects=async (reportId)=>{
+try{
+const response=await API.post(`/${reportId}/analyze-projects`)
+return response.data.Report.ProjectAnalysis
+
+}catch(err){
+  throw err
+}
+}
