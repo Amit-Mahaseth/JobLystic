@@ -1,6 +1,17 @@
 import { Link } from 'react-router-dom'
 import { Icon } from './ReportPrimitives.jsx'
 
+/**
+ * Renders company-specific readiness directory or deep-dive details for a selected company environment.
+ *
+ * @param {Object} props
+ * @param {Object} props.report - Complete report object containing `companyReadiness` array.
+ * @param {string} props.reportPath - Base URL path for report navigation.
+ * @param {string} [props.companyType] - Selected company type filter (e.g. 'startup', 'product-based').
+ * @param {Object} props.companyLabels - Mapping of company category slugs to display names.
+ * @param {Object} props.statusLabels - Mapping of readiness statuses to display labels.
+ * @returns {import('react').JSX.Element}
+ */
 export default function CompanyReadinessSection({ report, reportPath, companyType, companyLabels, statusLabels }) {
   const companyReadiness = Array.isArray(report.companyReadiness) ? report.companyReadiness : []
   const selectedCompany = companyReadiness.find(
@@ -9,7 +20,7 @@ export default function CompanyReadinessSection({ report, reportPath, companyTyp
 
   if (companyType) {
     if (!selectedCompany) {
-      return <p className="ir-empty-state">That company type is not included in this sample report.</p>
+      return <p className="ir-empty-state">That company type is not included in this report.</p>
     }
 
     return (
@@ -23,7 +34,7 @@ export default function CompanyReadinessSection({ report, reportPath, companyTyp
             </div>
             <div className="ir-company-detail-page__score">
               <strong>{selectedCompany.readinessScore}<small>/100</small></strong>
-              <span>Illustrative readiness</span>
+              <span>Readiness score</span>
             </div>
           </div>
           <div className="ir-company-detail-page__coverage">
@@ -47,14 +58,14 @@ export default function CompanyReadinessSection({ report, reportPath, companyTyp
             </Link>
           ))}
         </div>
-        <p className="ir-disclaimer">This illustrative score is a preparation guide only and does not guarantee hiring or selection.</p>
+        <p className="ir-disclaimer">Use this assessment as a preparation guide; it is not a prediction of hiring outcomes.</p>
       </section>
     )
   }
 
   return (
     <section className="ir-detail-content" aria-label="Readiness by company type">
-      <p className="ir-detail-intro">Choose a company environment to review the sample readiness assessment, evidence, and preparation focus.</p>
+      <p className="ir-detail-intro">Choose a company environment to review its readiness assessment, supporting evidence, and preparation focus.</p>
       <div className="ir-company-directory">
         {companyReadiness.map((company) => (
           <Link
@@ -72,7 +83,7 @@ export default function CompanyReadinessSection({ report, reportPath, companyTyp
           </Link>
         ))}
       </div>
-      <p className="ir-disclaimer">All displayed company readiness data is illustrative mock content.</p>
+      <p className="ir-disclaimer">Use these readiness assessments as preparation guidance, not as a hiring prediction.</p>
     </section>
   )
 }

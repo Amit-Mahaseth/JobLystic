@@ -27,10 +27,18 @@ test('POST /api/auth/register creates a user and returns a token cookie', async 
   })
   const body = await response.json()
 
-  expect(response.status).toBe(200)
-  expect(body.msg).toBe('Registration Successfully..')
-  expect(body.user.user).toMatchObject(user)
+  expect(response.status).toBe(201)
+  expect(body.msg).toBe('User Register Successfully')
+  expect(body.user).toMatchObject({
+    email: user.email,
+    Fullname: user.Fullname
+  })
+  expect(body.user).not.toHaveProperty('password')
   expect(response.headers.get('set-cookie')).toContain('token=signed-token')
   expect(mocks.hash).toHaveBeenCalledWith('password123', 10)
   expect(mocks.publish).toHaveBeenCalledWith('user_registered', expect.any(Object))
+  expect(mocks.sign).toHaveBeenCalledWith(
+    expect.objectContaining({id: user._id, email: user.email}),
+    expect.any(String)
+  )
 })

@@ -1,5 +1,16 @@
 import { SectionHeading } from './ReportPrimitives.jsx'
 
+/**
+ * Renders a list of interview questions (technical or behavioral) with interviewer intent and suggested answers.
+ *
+ * @param {Object} props
+ * @param {string} props.title - Section title heading.
+ * @param {string} props.eyebrow - Top eyebrow category label.
+ * @param {string} props.icon - SVG icon identifier.
+ * @param {Array<{ question: string, intention: string, answer: string }>} props.questions - List of interview questions.
+ * @param {'technical'|'behavioral'} props.kind - Question category type.
+ * @returns {import('react').JSX.Element}
+ */
 export default function QuestionSection({ title, eyebrow, icon, questions, kind }) {
   return (
     <section className="ir-section" aria-label={title}>
@@ -26,7 +37,7 @@ export default function QuestionSection({ title, eyebrow, icon, questions, kind 
               <p>{item.intention}</p>
             </div>
             <div className="ir-sample-answer">
-              <span>Sample answer</span>
+              <span>Answer guidance</span>
               <p>{item.answer}</p>
             </div>
           </article>

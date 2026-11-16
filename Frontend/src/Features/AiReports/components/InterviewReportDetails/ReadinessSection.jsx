@@ -1,5 +1,14 @@
 import { Icon, SectionHeading } from './ReportPrimitives.jsx'
 
+/**
+ * Section component displaying overall candidate readiness score, level badge,
+ * dimension breakdowns (role alignment, skill coverage, etc.), strengths, and priority areas.
+ *
+ * @param {Object} props
+ * @param {Object} props.report - Report object containing `readiness` scores and summaries.
+ * @param {Array<Object>} props.dimensions - Array of dimensional scores, weights, and explanations.
+ * @returns {import('react').JSX.Element}
+ */
 export default function ReadinessSection({ report, dimensions }) {
   const readiness = report.readiness
 
@@ -25,7 +34,7 @@ export default function ReadinessSection({ report, dimensions }) {
             </div>
           </div>
           <span className="ir-level-badge">{readiness.levels}</span>
-          <h3 id="readiness-title">Steady momentum</h3>
+          <h3 id="readiness-title">Readiness snapshot</h3>
           <p className="ir-score-summary">{readiness.explanation}</p>
           <div className="ir-coverage">
             <div className="ir-coverage__label">
@@ -34,7 +43,6 @@ export default function ReadinessSection({ report, dimensions }) {
             </div>
             <div className="ir-meter"><span style={{ width: `${readiness.assessmentCoverage}%` }} /></div>
           </div>
-          <p className="ir-illustrative-note">Illustrative sample report</p>
         </article>
 
         <article className="ir-card ir-dimensions-card">

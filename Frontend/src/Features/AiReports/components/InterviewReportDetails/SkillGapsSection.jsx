@@ -1,5 +1,14 @@
 import { Link } from 'react-router-dom'
 
+/**
+ * Section component rendering a directory of identified skill gaps or deep drilldown
+ * for an individual skill gap with evidence, target comparisons, and action plans.
+ *
+ * @param {Object} props
+ * @param {Object} props.report - Report object containing `skillGaps` array.
+ * @param {string} [props.skillName] - Optional name of the specific skill to focus on.
+ * @returns {import('react').JSX.Element}
+ */
 export default function SkillGapsSection({ report, skillName }) {
   const skill = report.skillGaps.find(
     (gap) => gap.skill.toLowerCase() === (skillName || '').toLowerCase(),
@@ -7,7 +16,7 @@ export default function SkillGapsSection({ report, skillName }) {
 
   if (skillName) {
     if (!skill) {
-      return <p className="ir-empty-state">That skill is not included in this sample report.</p>
+      return <p className="ir-empty-state">That skill is not included in this report.</p>
     }
 
     return (

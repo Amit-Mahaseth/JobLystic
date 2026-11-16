@@ -24,9 +24,14 @@ test('POST /api/auth/login authenticates a user and returns a token cookie', asy
   const body = await response.json()
 
   expect(response.status).toBe(200)
-  expect(body.msg).toBe('Login Successfully')
+  expect(body.msg).toBe('User Logged in Successfully')
   expect(body.user).toMatchObject({email: user.email})
+  expect(body.user).not.toHaveProperty('password')
   expect(response.headers.get('set-cookie')).toContain('token=signed-token')
   expect(mocks.compare).toHaveBeenCalledWith('password123', 'hashed-password')
   expect(mocks.publish).toHaveBeenCalledWith('user_logged_in', expect.any(Object))
+  expect(mocks.sign).toHaveBeenCalledWith(
+    expect.objectContaining({id: user._id, email: user.email}),
+    expect.any(String)
+  )
 })

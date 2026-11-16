@@ -20,6 +20,16 @@ transporter.verify((error, success) => {
   }
 });
 
+/**
+ * Sends an email message using the configured OAuth2 Gmail transporter.
+ *
+ * @param {string} to - Recipient email address.
+ * @param {string} subject - Email subject line.
+ * @param {string} [text] - Plain text body content.
+ * @param {string} [html] - HTML body content.
+ * @returns {Promise<import('nodemailer').SentMessageInfo>} Nodemailer delivery info.
+ * @throws {Error} If email transport encounters an error.
+ */
 const sendEmail = async (to, subject, text, html) => {
   try {
     const info = await transporter.sendMail({

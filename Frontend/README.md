@@ -1,16 +1,169 @@
-# React + Vite
+# JobLystic — Frontend Web Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The frontend client for **JobLystic** (JobAnalytics), a modern React single-page application built to help candidates evaluate their career readiness, analyze skill gaps against target job descriptions, generate customized preparation roadmaps, and download ATS-tailored resumes.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack
 
-## React Compiler
+- **Framework**: React 19 (`react`, `react-dom`)
+- **Bundler & Dev Server**: Vite 8 (`@vitejs/plugin-react`)
+- **Routing**: React Router v7 (`react-router-dom`)
+- **Styling**: SCSS / Sass (`sass`) with CSS custom properties for dual-theme support
+- **HTTP Client**: Axios (`axios`) configured with credentials for cookie-based authentication
+- **Code Quality**: ESLint (`eslint`, `eslint-plugin-react-hooks`, `eslint-plugin-react-refresh`)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Application Architecture & Directory Structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The application adopts a feature-driven folder organization:
+
+```
+Frontend/
+├── public/                       # Static public assets
+├── src/
+│   ├── components/               # Shared / Global UI components
+│   │   └── ToggleTheme/          # Dark/Light theme toggle switch
+│   │
+│   ├── contexts/                 # Global Context Providers
+│   │   └── themeContext.js       # Theme state and local storage persistence
+│   │
+│   ├── Features/                 # Domain-specific feature modules
+│   │   ├── AiReports/            # Interview & Career Report Feature
+│   │   │   ├── components/
+│   │   │   │   ├── AiGeneratedResumeSection.jsx
+│   │   │   │   ├── InterviewReportDetails.jsx
+│   │   │   │   └── InterviewReportDetails/
+│   │   │   │       ├── CompanyReadinessSection.jsx
+│   │   │   │       ├── PreparationSection.jsx
+│   │   │   │       ├── QuestionSection.jsx
+│   │   │   │       ├── ReadinessSection.jsx
+│   │   │   │       ├── ReportPrimitives.jsx
+│   │   │   │       └── SkillGapsSection.jsx
+│   │   │   ├── hook/
+│   │   │   │   └── UseAiReport.js         # Report generation & retrieval logic
+│   │   │   ├── pages/
+│   │   │   │   ├── AllReports.jsx         # Saved reports library
+│   │   │   │   └── InterviewReport.jsx    # Deep-dive report dashboard
+│   │   │   ├── Services/
+│   │   │   │   └── report.api.js          # REST client for AI service (Port 3002)
+│   │   │   ├── styles/                    # Feature-specific SCSS files
+│   │   │   └── Interview.Context.jsx      # Interview report state provider
+│   │   │
+│   │   └── Auth/                 # Authentication & User Management Feature
+│   │       ├── components/
+│   │       │   └── Protector.jsx          # Route guard for protected pages
+│   │       ├── hook/
+│   │       │   └── UseAuth.js             # Authentication custom hook
+│   │       ├── pages/
+│   │       │   ├── Login.jsx              # Sign-in page with Google OAuth
+│   │       │   └── Register.jsx           # Sign-up page
+│   │       ├── services/
+│   │       │   └── auth.api.js            # REST client for Auth service (Port 3000)
+│   │       ├── styles/                    # Auth styling
+│   │       └── auth.context.jsx           # User authentication state provider
+│   │
+│   ├── pages/                    # Primary application views
+│   │   └── Home.jsx              # Career intake workspace & resume upload
+│   │
+│   ├── routes/
+│   │   └── app.routes.jsx        # Centralized route definitions
+│   │
+│   ├── styles/                   # Global style tokens, resets, variables
+│   ├── App.jsx                   # Root application shell & context composition
+│   └── main.jsx                  # React DOM entry point
+│
+├── index.html                    # Application HTML template
+├── vite.config.js                # Vite build configuration
+└── package.json
+```
+
+---
+
+## Core Features & Workflow
+
+### 1. Career Intake Workspace (`/`)
+- **Step 1: Job Description Input**: Detailed textarea to paste target job responsibilities and technical expectations.
+- **Step 2: Self Description Input**: Opportunity for candidate to highlight their background, stack proficiency, and career goals.
+- **Step 3: PDF Resume Upload**:
+  - Drag-and-drop or file picker accepting PDF resumes (up to 3MB limit).
+  - Built-in **client-side PDF preview modal** (`<iframe src={blobUrl}>`) to review documents prior to submission.
+  - File removal and replacement controls.
+- **Instant Analysis Trigger**: Multi-part submission invoking AI analysis and redirecting immediately to the generated report.
+
+### 2. Authentication & Protected Routes (`/login`, `/register`)
+- Form-based registration and login with real-time feedback and validation.
+- Direct **Google OAuth 2.0** login button routing through the backend passport flow.
+- Seamless authentication check (`GetMe`) with cookie persistence.
+- `Protector` component automatically redirects unauthenticated users to `/login`.
+
+### 3. Report Library (`/interviewAllreport`)
+- Central repository of all historical evaluations generated by the logged-in candidate.
+- Displays overall readiness score, target role snapshot, and creation date.
+- Instant routing to inspect any past report.
+
+### 4. Comprehensive Interview Report Dashboard (`/interview-report/report/:reportId/...`)
+Deep modular insights segmented across tabs and sub-routes:
+- **Overview**: Circular SVG score indicator (0-100), readiness tier (`Beginner`, `Intermediate`, `Advanced`), top strengths, priority improvement areas, and summary cards.
+- **Readiness Details (`readiness`)**: Dimensional weighted progress indicators covering Role Alignment, Skill Coverage, Technical Knowledge, and Practical Ability.
+- **Company Readiness (`companies` / `companies/:companyType`)**: Readiness breakdown specifically calibrated for **Startup**, **Product-based**, **Service-based**, **Enterprise**, and **Consulting** environments.
+- **Skill Gap Analysis (`skills` / `skills/:skillName`)**: Inventory of analyzed skills with severity tags (`low`, `medium`, `high`), required vs. current proficiency metrics, detailed reasoning, missing concepts, and action plans.
+- **Preparation Roadmap (`roadmap`)**: Step-by-step sprint tasks categorizing study topics, practice sessions, project deliverables, and estimated completion times.
+- **Interview Questions (`technical` / `behavioral`)**: Role-specific technical and behavioral questions accompanied by interviewer intent and recommended answer structures.
+- **AI-Generated Resume (`ai-resume`)**: Tailors an ATS-compliant resume directly from the interview analysis, displays an interactive PDF preview, and provides instant download.
+- **Project Audits**: GitHub architecture audit and live URL performance/accessibility inspection.
+
+### 5. Dynamic Dual-Theme Support
+- Light & dark mode engine toggled from the navigation bar.
+- Uses CSS variables (`data-theme="dark"` / `data-theme="light"`) for smooth background, typography, and border transitions.
+- Remembers user theme preference in `localStorage`.
+
+---
+
+## Application Routing Table
+
+| Route Pattern | Component | Protected | Description |
+| :--- | :--- | :---: | :--- |
+| `/` | `Home` | Yes | Career intake workspace & PDF upload |
+| `/login` | `Login` | No | User login & Google OAuth |
+| `/register` | `Register` | No | User registration |
+| `/interviewAllreport` | `AllReports` | Yes | List of saved interview reports |
+| `/interview-report` | `InterviewReport` | Yes | Latest interview report overview |
+| `/interview-report/:section` | `InterviewReport` | Yes | Section-level navigation |
+| `/interview-report/:section/:item` | `InterviewReport` | Yes | Item-level drilldown |
+| `/interview-report/report/:reportId` | `InterviewReport` | Yes | Specific report overview |
+| `/interview-report/report/:reportId/:section` | `InterviewReport` | Yes | Specific report section |
+| `/interview-report/report/:reportId/:section/:item` | `InterviewReport` | Yes | Specific report item drilldown |
+
+---
+
+## Backend Service Integration
+
+The frontend connects directly to two backend microservices with credentials enabled:
+- **Auth Service**: `http://localhost:3000` (`/api/auth/*`)
+- **AI Report Service**: `http://localhost:3002` (`/api/report/*`)
+
+Authentication relies on cross-origin HTTP-only cookies (`token`).
+
+---
+
+## Development & Scripts
+
+### Prerequisites
+- Node.js (v18 or higher recommended)
+- npm or yarn
+
+### Installation
+```bash
+cd Frontend
+npm install
+```
+
+### Available Scripts
+```bash
+npm run dev        # Starts Vite local development server (http://localhost:5173)
+npm run build      # Bundles the application for production into dist/
+npm run preview    # Locally previews the production build
+npm run lint       # Runs ESLint to verify code quality
+```

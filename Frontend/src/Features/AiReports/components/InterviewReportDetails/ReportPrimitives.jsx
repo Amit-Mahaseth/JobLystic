@@ -1,3 +1,11 @@
+/**
+ * Shared SVG Icon renderer for interview report elements.
+ *
+ * @param {Object} props
+ * @param {string} props.name - Name key of the icon to render.
+ * @param {number} [props.size=18] - Icon width and height dimensions in pixels.
+ * @returns {import('react').JSX.Element}
+ */
 export function Icon({ name, size = 18 }) {
   const paths = {
     target: <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1" /></>,
@@ -29,6 +37,16 @@ export function Icon({ name, size = 18 }) {
   )
 }
 
+/**
+ * Standardized header component displaying an icon, eyebrow label, title, and optional description.
+ *
+ * @param {Object} props
+ * @param {string} props.eyebrow - Category label above title.
+ * @param {string} props.title - Main section heading.
+ * @param {string} [props.description] - Supplementary explanation text.
+ * @param {string} props.icon - Icon identifier to render in badge.
+ * @returns {import('react').JSX.Element}
+ */
 export function SectionHeading({ eyebrow, title, description, icon }) {
   return (
     <div className="ir-section-heading">

@@ -1,0 +1,118 @@
+.global-processing {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgb(9 18 13 / 58%);
+  opacity: 0;
+  pointer-events: none;
+  backdrop-filter: blur(0);
+  transition: opacity 180ms ease, backdrop-filter 180ms ease;
+
+  &.is-active {
+    opacity: 1;
+    pointer-events: auto;
+    backdrop-filter: blur(7px);
+  }
+}
+
+.global-processing__card {
+  display: grid;
+  width: min(100%, 430px);
+  justify-items: center;
+  padding: 34px 32px 28px;
+  border: 1px solid var(--ui-line);
+  border-radius: var(--ui-radius-section);
+  color: var(--ui-ink);
+  background: var(--ui-surface);
+  box-shadow: 0 24px 80px rgb(0 0 0 / 25%);
+  text-align: center;
+  outline: none;
+  transform: translateY(8px) scale(0.98);
+  transition: transform 180ms ease;
+
+  .global-processing.is-active & {
+    transform: translateY(0) scale(1);
+  }
+
+  h2 {
+    margin: 20px 0 0;
+    font-family: var(--ui-font-display);
+    font-size: clamp(18px, 4vw, 22px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+}
+
+.global-processing__spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--ui-accent-soft);
+  border-top-color: var(--ui-accent-strong);
+  border-right-color: var(--ui-accent-strong);
+  border-radius: 50%;
+  animation: global-processing-spin 850ms linear infinite;
+}
+
+.global-processing__detail {
+  margin: 9px 0 0;
+  color: var(--ui-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.global-processing__message {
+  max-width: 330px;
+  margin: 18px 0 0;
+  color: var(--ui-muted);
+  opacity: 0.8;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.global-processing__progress {
+  width: 100%;
+  height: 5px;
+  margin-top: 23px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--ui-surface-soft);
+
+  span {
+    display: block;
+    width: 38%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--ui-action), var(--ui-accent));
+    animation: global-processing-progress 1.45s ease-in-out infinite;
+  }
+}
+
+@keyframes global-processing-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes global-processing-progress {
+  from { transform: translateX(-110%); }
+  to { transform: translateX(265%); }
+}
+
+@media (max-width: 480px) {
+  .global-processing__card {
+    padding: 29px 22px 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .global-processing,
+  .global-processing__card {
+    transition: none;
+  }
+
+  .global-processing__spinner,
+  .global-processing__progress span {
+    animation: none;
+  }
+}

@@ -8,6 +8,7 @@ export class BasicColorPicker {
     constructor(editor: any);
     renderButton(): HTMLInputElement;
     update(value: any): void;
+    updateOpacity(value: any): void;
     destroy(): void;
     hideDropdown(): void;
     #private;
@@ -33,7 +34,7 @@ export class ColorPicker {
     _moveToEnd(event: any): void;
     hideDropdown(): void;
     _hideDropdownFromKeyboard(): void;
-    updateColor(color: any): void;
+    update(color: any): void;
     destroy(): void;
     #private;
 }

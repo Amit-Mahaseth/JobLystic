@@ -5,19 +5,23 @@ import passport from 'passport'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import config from '../src/config/config.js'
 import cors from 'cors'
-const app=express()
 
+/**
+ * Express application instance for the Auth microservice.
+ * Configured with body parsers, cookie parser, CORS, Passport Google OAuth strategy, and auth routes.
+ */
+const app = express()
 
 app.use(cookieParser())
 app.use(express.json())
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({ extended: true }))
 app.use(cors({
-  origin:"http://localhost:5173",
-  credentials:true
+  origin: "http://localhost:5173",
+  credentials: true
 }))
 app.use(passport.initialize())
 
-app.use('/api/auth',AuthRoutes)
+app.use('/api/auth', AuthRoutes)
 
 passport.use(new GoogleStrategy({
   clientID: config.GOOGLE_CLIENT_ID,
@@ -26,4 +30,5 @@ passport.use(new GoogleStrategy({
 }, (accessToken, refreshToken, profile, done) => {
   return done(null, profile);
 }));
+
 export default app

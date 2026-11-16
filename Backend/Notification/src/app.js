@@ -1,6 +1,8 @@
 import express from 'express'
 
-
-const app=express()
+/**
+ * Express application instance for the Notification worker service.
+ */
+const app = express()
 
 export default app

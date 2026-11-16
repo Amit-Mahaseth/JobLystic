@@ -8,6 +8,7 @@ export const mocks = {
   compare: jest.fn(),
   sign: jest.fn(),
   publish: jest.fn(),
+  sendEmail: jest.fn(),
   authenticate: jest.fn()
 }
 
@@ -33,6 +34,9 @@ await jest.unstable_mockModule('jsonwebtoken', () => ({
 }))
 await jest.unstable_mockModule('../../src/brokers/rabbitmq.js', () => ({
   PublishToQueue: mocks.publish
+}))
+await jest.unstable_mockModule('../../src/utils/email.js', () => ({
+  default: mocks.sendEmail
 }))
 
 const passportModule = await import('passport')

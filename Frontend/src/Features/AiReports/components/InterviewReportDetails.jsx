@@ -4,6 +4,19 @@ import QuestionSection from './InterviewReportDetails/QuestionSection.jsx'
 import ReadinessSection from './InterviewReportDetails/ReadinessSection.jsx'
 import SkillGapsSection from './InterviewReportDetails/SkillGapsSection.jsx'
 
+/**
+ * Dynamic dispatcher component rendering specific report sub-views based on active route section.
+ *
+ * @param {Object} props
+ * @param {string} props.section - Active section slug (e.g. 'readiness', 'companies', 'skills', 'roadmap', 'technical', 'behavioral').
+ * @param {string} [props.item] - Optional sub-item identifier (e.g. company type or skill name).
+ * @param {Object} props.report - Complete interview report dataset.
+ * @param {string} props.reportPath - Base URL path for current report navigation.
+ * @param {Array<Object>} [props.dimensions] - Dimensional readiness configuration array.
+ * @param {Object} [props.companyLabels] - Display labels mapping for company categories.
+ * @param {Object} [props.statusLabels] - Display labels mapping for readiness statuses.
+ * @returns {import('react').JSX.Element} The rendered section sub-component or empty state.
+ */
 export default function InterviewReportDetails({
   section,
   item,
@@ -19,8 +32,8 @@ export default function InterviewReportDetails({
         <ReadinessSection report={report} dimensions={dimensions} />
         <div className="ir-card ir-methodology">
           <h3>How to read this section</h3>
-          <p>The overall score is shown on a 0-100 scale. The dimension breakdowns use illustrative scores and weights to explain the schema fields; they are not actual assessment outcomes.</p>
-          <p>Assessment coverage describes the portion of the sample report represented in this view.</p>
+          <p>The overall score and dimension breakdown reflect the resume and role details used for this assessment.</p>
+          <p>Assessment coverage indicates how much of the available evidence is represented in the analysis.</p>
         </div>
       </>
     )

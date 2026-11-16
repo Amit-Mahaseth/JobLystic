@@ -1,39 +1,14 @@
 import '../styles/interview.report.scss'
+import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import WorkspaceNavigation from '../../../components/WorkspaceNavigation.jsx'
 import ToggleTheme from '../../../components/ToggleTheme/ToggleTheme.jsx'
 import { useTheme } from '../../../contexts/themeContext.js'
 import InterviewReportDetails from '../components/InterviewReportDetails.jsx'
 import AiGeneratedResumeSection from '../components/AiGeneratedResumeSection.jsx'
-import {UseAiReport} from '../hook/UseAiReport.js'
-
-
-
-// const dimensions = [
-//   {
-//     name: 'Role Alignment',
-//     score: 78,
-//     weight: 30,
-//     explanation: 'Your full-stack experience maps well to common role responsibilities.',
-//   },
-//   {
-//     name: 'Skill Coverage',
-//     score: 70,
-//     weight: 25,
-//     explanation: 'Most core skills are represented, with a few depth areas to develop.',
-//   },
-//   {
-//     name: 'Technical Knowledge',
-//     score: report.readiness.score,
-//     weight: report.readiness.weight,
-//     explanation: report.readiness.explanation,
-//   },
-//   {
-//     name: 'Practical Ability',
-//     score: 74,
-//     weight: 20,
-//     explanation: 'Project work shows practical delivery and implementation experience.',
-//   },
-// ]
+import ReportMetadataEditor from '../components/ReportMetadataEditor.jsx'
+import { UseAiReport } from '../hook/UseAiReport.js'
+import '../../../styles/visual-system.scss'
 
 const companyLabels = {
   'service-based': 'Service-based',
@@ -60,6 +35,7 @@ function Icon({ name, size = 18 }) {
     route: <><circle cx="6" cy="5" r="2" /><circle cx="18" cy="19" r="2" /><path d="M6 7v3a3 3 0 0 0 3 3h6a3 3 0 0 1 3 3v1" /></>,
     code: <><path d="m8 8-4 4 4 4m8-8 4 4-4 4m-3-11-2 14" /></>,
     chat: <><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z" /></>,
+    file: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" /><path d="M14 2v6h6M8 13h8m-8 4h8" /></>,
     check: <><path d="m5 12 4 4L19 6" /></>,
   }
 
@@ -87,9 +63,16 @@ const reportSections = [
   { slug: 'roadmap', label: 'Preparation roadmap' },
   { slug: 'technical', label: 'Technical questions' },
   { slug: 'behavioral', label: 'Behavioral questions' },
-  { slug: 'ai-resume', label: 'AI Resume' },
 ]
 
+/**
+ * Overview component rendering the high-level report dashboard cards, scores, and section preview widgets.
+ *
+ * @param {Object} props
+ * @param {Object} props.report - Complete report dataset.
+ * @param {string} props.reportPath - Base URL for the current report view.
+ * @returns {import('react').JSX.Element}
+ */
 function OverviewPage({ report, reportPath }) {
   return (
     <>
@@ -98,7 +81,7 @@ function OverviewPage({ report, reportPath }) {
           <div
             className="ir-score-ring"
             role="img"
-            aria-label={`Illustrative readiness score: ${report.readiness.OverallScore} out of 100`}
+            aria-label={`Readiness score: ${report.readiness.OverallScore} out of 100`}
             style={{ '--score': `${report.readiness.OverallScore}%` }}
           >
             <div className="ir-score-ring__inner">
@@ -109,7 +92,7 @@ function OverviewPage({ report, reportPath }) {
           <div>
             <span className="ir-level-badge">{report.readiness.levels}</span>
             <h2>Overall readiness</h2>
-            <p>This is an illustrative sample score to help demonstrate the report layout.</p>
+            <p>This score summarizes the evidence in this assessment.</p>
             <Link className="ir-text-link" to={`${reportPath}/readiness`}>View readiness details <span aria-hidden="true">→</span></Link>
           </div>
         </div>
@@ -129,7 +112,7 @@ function OverviewPage({ report, reportPath }) {
         <section className="ir-card ir-overview-card">
           <div className="ir-overview-card__heading">
             <span className="ir-section-icon"><Icon name="building" /></span>
-            <div><h2>Company readiness</h2><p>Sample score previews across work environments.</p></div>
+            <div><h2>Company readiness</h2><p>Readiness signals across company environments.</p></div>
           </div>
           <div className="ir-preview-list">
             {report.companyReadiness.slice(0, 3).map((company) => (
@@ -149,7 +132,7 @@ function OverviewPage({ report, reportPath }) {
         <section className="ir-card ir-overview-card">
           <div className="ir-overview-card__heading">
             <span className="ir-section-icon"><Icon name="chart" /></span>
-            <div><h2>Skill gap analysis</h2><p>Preview the skills in this sample report.</p></div>
+            <div><h2>Skill gap analysis</h2><p>Review the gaps identified for this role.</p></div>
           </div>
           <div className="ir-preview-list">
             {report.skillGaps.map((gap) => (
@@ -181,26 +164,39 @@ function OverviewPage({ report, reportPath }) {
       <div className="ir-overview-question-links">
         <Link className="ir-question-link" to={`${reportPath}/technical`}>
           <span className="ir-section-icon"><Icon name="code" /></span>
-          <span><strong>Technical interview questions</strong><small>{report.technicalQuestions.length} sample prompts and answers</small></span>
+          <span><strong>Technical interview questions</strong><small>{report.technicalQuestions.length} prompts and answer guides</small></span>
           <b aria-hidden="true">→</b>
         </Link>
         <Link className="ir-question-link" to={`${reportPath}/behavioral`}>
           <span className="ir-section-icon"><Icon name="chat" /></span>
-          <span><strong>Behavioral interview questions</strong><small>{report.behavioralQuestions.length} sample prompts and answers</small></span>
+          <span><strong>Behavioral interview questions</strong><small>{report.behavioralQuestions.length} prompts and answer guides</small></span>
+          <b aria-hidden="true">→</b>
+        </Link>
+        <Link className="ir-question-link ir-resume-overview-link" to={`${reportPath}/ai-resume`}>
+          <span className="ir-section-icon"><Icon name="file" /></span>
+          <span><strong>Create a tailored resume</strong><small>Generate and download a resume PDF</small></span>
           <b aria-hidden="true">→</b>
         </Link>
       </div>
-      <p className="ir-disclaimer">All scores and examples shown are illustrative mock data, not actual assessment results or hiring predictions.</p>
+      <p className="ir-disclaimer">Use this assessment as a preparation guide; it is not a prediction of interview or hiring outcomes.</p>
     </>
   )
 }
 
+/**
+ * Main dashboard view for displaying an interview report, handling section routing,
+ * AI resume generation, and detailed sub-views.
+ *
+ * @returns {import('react').JSX.Element}
+ */
 function InterviewReport() {
   const { theme } = useTheme()
+  const [isMetadataEditorOpen, setIsMetadataEditorOpen] = useState(false)
   const { section, item, reportId } = useParams()
-  const { report, loading, HandleAiGeneratedResumePdf } = UseAiReport()
+  const { report, loading, HandleAiGeneratedResumePdf, HandleUpdateReportMetadata } = UseAiReport()
   const reportPath = reportId ? `/interview-report/report/${reportId}` : '/interview-report'
   const activeSection = reportSections.find((entry) => entry.slug === section)
+    || (section === 'ai-resume' ? { slug: section, label: 'AI Resume' } : undefined)
   const pageTitle = item
     ? section === 'companies'
       ? companyLabels[item] || 'Company details'
@@ -209,37 +205,49 @@ function InterviewReport() {
         : activeSection?.label
     : activeSection?.label || 'Your Interview Analysis'
 
-  if (loading) return <p>Loading report...</p>
-  if (!report) return <p>Report not found.</p>
+  if (loading && (!report || (reportId && report._id !== reportId))) {
+    return (
+      <main className="ir-page" data-theme={theme}>
+        <WorkspaceNavigation active="reports" />
+        <div className="ir-container">
+          <p className="ir-empty-state" role="status">Loading report…</p>
+        </div>
+      </main>
+    )
+  }
+  if (!report) {
+    return (
+      <main className="ir-page" data-theme={theme}>
+        <WorkspaceNavigation active="reports" />
+        <div className="ir-container">
+          <p className="ir-empty-state" role="status">Report not found.</p>
+        </div>
+      </main>
+    )
+  }
 
   return (
     <main className="ir-page" data-theme={theme}>
+      <WorkspaceNavigation active="reports" />
       <header className="ir-topbar">
-        <Link className="ir-brand" to={reportPath} aria-label="JobAnalytics report overview">
-          <span className="ir-brand__mark"><Icon name="briefcase" size={18} /></span>
-          <span>JobAnalytics</span>
-        </Link>
-        <nav className="ir-topbar-nav" aria-label="Report sections">
-          <Link className={!section ? 'is-active' : ''} to={reportPath}>Overview</Link>
-          {reportSections.map((entry) => (
-            <Link
-              className={section === entry.slug ? 'is-active' : ''}
-              key={entry.slug}
-              to={`${reportPath}/${entry.slug}`}
-            >
-              {entry.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="ir-topbar-actions">
-          <Link className="ir-home-link" to="/interviewAllreport">
-            All reports
-            <span aria-hidden="true">→</span>
-          </Link>
-          <Link className="ir-home-link" to="/">
-            Home
-            <span aria-hidden="true">→</span>
-          </Link>
+        <div className="ir-topbar-context">
+          <Link to="/interviewAllreport">Reports</Link>
+          <span aria-hidden="true">/</span>
+          <strong>{report.reportTitle || report.targetRole || 'Assessment report'}</strong>
+        </div>
+        <div className="ir-topbar-tools">
+          <nav className="ir-topbar-nav" aria-label="Report sections">
+            <Link className={!section ? 'is-active' : ''} to={reportPath}>Overview</Link>
+            {reportSections.map((entry) => (
+              <Link
+                className={section === entry.slug ? 'is-active' : ''}
+                key={entry.slug}
+                to={`${reportPath}/${entry.slug}`}
+              >
+                {entry.label}
+              </Link>
+            ))}
+          </nav>
           <ToggleTheme />
         </div>
       </header>
@@ -253,16 +261,28 @@ function InterviewReport() {
         <section className="ir-report-header ir-report-header--compact">
           <div>
             <p className="ir-report-kicker"><Icon name="spark" size={15} /> {section ? 'REPORT DETAILS' : 'REPORT OVERVIEW'}</p>
-            <h1>{section ? pageTitle : 'Your Interview Analysis'}</h1>
+            <h1>{section ? pageTitle : report.reportTitle || 'Your Interview Analysis'}</h1>
             <p className="ir-report-subtitle">
               {section
                 ? `Explore ${pageTitle.toLowerCase()} with focused details and practical context.`
-                 : 'Understand your readiness, identify skill gaps, and plan your next steps.'}
+                : [
+                  report.targetRole && `Target role: ${report.targetRole}`,
+                  report.resumeTitle && `Resume: ${report.resumeTitle}`,
+                ].filter(Boolean).join(' · ') || 'Understand your readiness, identify skill gaps, and plan your next steps.'}
             </p>
+            {!section && (
+              <button
+                className="ir-report-metadata-edit"
+                type="button"
+                onClick={() => setIsMetadataEditorOpen(true)}
+              >
+                Edit report details
+              </button>
+            )}
           </div>
           {!section && <div className="ir-report-date">
             <span>REPORT DATE</span>
-            <strong>October 20, 2026</strong>
+            <strong>{report.createdAt ? new Date(report.createdAt).toLocaleDateString() : 'Date unavailable'}</strong>
           </div>}
         </section>
         {section && <div className="ir-back-link"><Link to="/interview-report">← Back to report overview</Link></div>}
@@ -270,6 +290,7 @@ function InterviewReport() {
           <AiGeneratedResumeSection
             reportId={report._id}
             onGenerate={HandleAiGeneratedResumePdf}
+            theme={theme}
           />
         ) : section ? (
           <InterviewReportDetails
@@ -287,11 +308,18 @@ function InterviewReport() {
 
         <footer className="ir-footer">
           <span className="ir-footer__mark"><Icon name="briefcase" size={15} /></span>
-          <span>JobAnalytics</span>
+          <span>Joblystics</span>
           <i />
           <p>Illustrative report for career preparation</p>
         </footer>
       </div>
+      {isMetadataEditorOpen && (
+        <ReportMetadataEditor
+          report={report}
+          onClose={() => setIsMetadataEditorOpen(false)}
+          onSave={(metadata) => HandleUpdateReportMetadata(report._id, metadata)}
+        />
+      )}
     </main>
   )
 }

@@ -1,10 +1,15 @@
 import { Navigate } from "react-router-dom";
 import { UseAuth } from "../hook/UseAuth";
 
-import React from 'react'
-
- const Protector = ({ children }) => {
-
+/**
+ * Route protector component that checks authentication state.
+ * Displays loading indicator during session verification and redirects unauthenticated users to `/login`.
+ *
+ * @param {Object} props
+ * @param {import('react').ReactNode} props.children - Child components to render when authenticated.
+ * @returns {import('react').JSX.Element} Protected children, loading view, or redirect.
+ */
+const Protector = ({ children }) => {
   const { loading, user } = UseAuth()
 
   if (loading) {
@@ -13,10 +18,7 @@ import React from 'react'
   if (!user) {
     return <Navigate to="/login" replace />
   }
-  return (
-    children
-  )
+  return children
 }
-
 
 export default Protector

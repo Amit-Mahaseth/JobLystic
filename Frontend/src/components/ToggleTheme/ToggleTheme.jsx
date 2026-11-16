@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ThemeContext, useTheme } from '../../contexts/themeContext.js'
 
 const THEME_STORAGE_KEY = 'genai-home-theme'
@@ -6,12 +6,16 @@ const THEME_STORAGE_KEY = 'genai-home-theme'
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     try {
-      return window.localStorage.getItem(THEME_STORAGE_KEY) === 'light' ? 'light' : 'dark'
+      return window.localStorage.getItem(THEME_STORAGE_KEY) === 'dark' ? 'dark' : 'light'
     } catch (error) {
       console.error('Could not read saved theme preference:', error)
-      return 'dark'
+      return 'light'
     }
   })
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+  }, [theme])
 
   const toggleTheme = () => {
     setTheme((currentTheme) => {

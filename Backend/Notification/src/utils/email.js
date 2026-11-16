@@ -20,13 +20,21 @@ transporter.verify((error, success) => {
   }
 });
 
-// Function to send email
+/**
+ * Sends a transactional email message through Nodemailer with Gmail OAuth2 authentication.
+ *
+ * @param {string} to - Recipient email address.
+ * @param {string} subject - Email subject line.
+ * @param {string} [text] - Optional plain text email body.
+ * @param {string} [html] - HTML formatted email template.
+ * @returns {Promise<void>}
+ */
 const sendEmail = async (to, subject, text, html) => {
   try {
     const info = await transporter.sendMail({
-      from: `"Spotify" <${config.EMAIL_USER}>`, 
-      to, 
-      subject, 
+      from: `"Spotify" <${config.EMAIL_USER}>`,
+      to,
+      subject,
       text,
       html,
     });
@@ -35,6 +43,7 @@ const sendEmail = async (to, subject, text, html) => {
     console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
   } catch (error) {
     console.error('Error sending email:', error);
+    throw error;
   }
 };
 

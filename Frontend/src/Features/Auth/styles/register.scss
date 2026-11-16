@@ -1,27 +1,21 @@
 @use "./auth";
 
-.register-page {
-  .auth-card {
-    border-top: 3px solid #8b5cf6;
-  }
-
-  .auth-heading {
-    margin-bottom: 24px;
-  }
-
-  .auth-form {
-    gap: 15px;
-  }
-  .auth-field{
-.register-input{
-  display: flex;
-  gap: 10px;
-    #register-firstname{
-width: 50%;
-    }
-    #register-lastname{
-width: 50%;
-    }
-  }
+.register-page .auth-heading {
+  margin-bottom: 23px;
 }
+
+.register-page .auth-form {
+  gap: 15px;
+}
+
+.register-input {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (max-width: 380px) {
+  .register-input {
+    grid-template-columns: 1fr;
+  }
 }

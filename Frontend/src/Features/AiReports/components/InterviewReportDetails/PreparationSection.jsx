@@ -1,6 +1,13 @@
 import { useState } from 'react'
 import { Icon, SectionHeading } from './ReportPrimitives.jsx'
 
+/**
+ * Section component rendering a multi-day preparation roadmap and task tracking progress.
+ *
+ * @param {Object} props
+ * @param {Object} props.report - Interview report object containing `roadmap` and `preparationIdeas`.
+ * @returns {import('react').JSX.Element}
+ */
 export default function PreparationSection({ report }) {
   const [taskStatuses, setTaskStatuses] = useState(() => (
     Object.fromEntries(report.roadmap.map((task) => [task.title, 'in-progress']))

@@ -1,9 +1,14 @@
 import SendEmail from '../utils/email.js';
 import { SubscribeToQueue } from './rabbitmq.js';
 
-
-async function StartListener(){
-    await SubscribeToQueue('user_registered',async (data)=>{
+/**
+ * Initializes RabbitMQ event listeners for notification queues (`user_registered` and `user_logged_in`).
+ * Consumes published event payloads and triggers transactional email templates via Nodemailer.
+ *
+ * @returns {Promise<void>}
+ */
+async function StartListener() {
+    await SubscribeToQueue('user_registered', async (data) => {
         const {email,Fullname:{firstname,lastname}}=data;
       const Template = `
 <!DOCTYPE html>
