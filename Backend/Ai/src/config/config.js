@@ -8,7 +8,8 @@ const _Config={
     MONGO_URI:process.env.MONGO_URI,
     GEMINI_API_KEY:process.env.GEMINI_API_KEY,
     GITHUB_API:process.env.GITHUB_API,
-    FIRECRAWL_API:process.env.FIRECRAWL_API
+    FIRECRAWL_API:process.env.FIRECRAWL_API,
+    PAGESPEED_API_KEY:process.env.PAGESPEED_API_KEY
 }
 
 export default Object.freeze(_Config)
